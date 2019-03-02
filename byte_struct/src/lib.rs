@@ -109,6 +109,131 @@ impl ByteStructImpl for i32 {
     }
 }
 
+impl ByteStructImpl for u64 {
+    const BYTE_LEN: usize = 8;
+    fn write_le_bytes(&self, bytes: &mut [u8]) {
+        bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
+    }
+    fn read_le_bytes(bytes: &[u8]) -> Self {
+        u64::from_le_bytes([
+            bytes[0], bytes[1], bytes[2], bytes[3],
+            bytes[4], bytes[5], bytes[6], bytes[7]])
+    }
+    fn write_be_bytes(&self, bytes: &mut [u8]) {
+        bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
+    }
+    fn read_be_bytes(bytes: &[u8]) -> Self {
+        u64::from_be_bytes([
+            bytes[0], bytes[1], bytes[2], bytes[3],
+            bytes[4], bytes[5], bytes[6], bytes[7]])
+    }
+}
+
+impl ByteStructImpl for i64 {
+    const BYTE_LEN: usize = 8;
+    fn write_le_bytes(&self, bytes: &mut [u8]) {
+        bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
+    }
+    fn read_le_bytes(bytes: &[u8]) -> Self {
+        i64::from_le_bytes([
+            bytes[0], bytes[1], bytes[2], bytes[3],
+            bytes[4], bytes[5], bytes[6], bytes[7]])
+    }
+    fn write_be_bytes(&self, bytes: &mut [u8]) {
+        bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
+    }
+    fn read_be_bytes(bytes: &[u8]) -> Self {
+        i64::from_be_bytes([
+            bytes[0], bytes[1], bytes[2], bytes[3],
+            bytes[4], bytes[5], bytes[6], bytes[7]])
+    }
+}
+
+impl ByteStructImpl for u128 {
+    const BYTE_LEN: usize = 16;
+    fn write_le_bytes(&self, bytes: &mut [u8]) {
+        bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
+    }
+    fn read_le_bytes(bytes: &[u8]) -> Self {
+        u128::from_le_bytes([
+            bytes[0], bytes[1], bytes[2], bytes[3],
+            bytes[4], bytes[5], bytes[6], bytes[7],
+            bytes[8], bytes[9], bytes[10], bytes[11],
+            bytes[12], bytes[13], bytes[14], bytes[15],
+            ])
+    }
+    fn write_be_bytes(&self, bytes: &mut [u8]) {
+        bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
+    }
+    fn read_be_bytes(bytes: &[u8]) -> Self {
+        u128::from_be_bytes([
+            bytes[0], bytes[1], bytes[2], bytes[3],
+            bytes[4], bytes[5], bytes[6], bytes[7],
+            bytes[8], bytes[9], bytes[10], bytes[11],
+            bytes[12], bytes[13], bytes[14], bytes[15]])
+    }
+}
+
+impl ByteStructImpl for i128 {
+    const BYTE_LEN: usize = 16;
+    fn write_le_bytes(&self, bytes: &mut [u8]) {
+        bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
+    }
+    fn read_le_bytes(bytes: &[u8]) -> Self {
+        i128::from_le_bytes([
+            bytes[0], bytes[1], bytes[2], bytes[3],
+            bytes[4], bytes[5], bytes[6], bytes[7],
+            bytes[8], bytes[9], bytes[10], bytes[11],
+            bytes[12], bytes[13], bytes[14], bytes[15]])
+    }
+    fn write_be_bytes(&self, bytes: &mut [u8]) {
+        bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
+    }
+    fn read_be_bytes(bytes: &[u8]) -> Self {
+        i128::from_be_bytes([
+            bytes[0], bytes[1], bytes[2], bytes[3],
+            bytes[4], bytes[5], bytes[6], bytes[7],
+            bytes[8], bytes[9], bytes[10], bytes[11],
+            bytes[12], bytes[13], bytes[14], bytes[15]])
+    }
+}
+
+impl ByteStructImpl for f32 {
+    const BYTE_LEN: usize = 4;
+    fn write_le_bytes(&self, bytes: &mut [u8]) {
+        bytes.copy_from_slice(&self.clone().to_bits().to_le_bytes()[..]);
+    }
+    fn read_le_bytes(bytes: &[u8]) -> Self {
+        f32::from_bits(u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]))
+    }
+    fn write_be_bytes(&self, bytes: &mut [u8]) {
+        bytes.copy_from_slice(&self.clone().to_bits().to_be_bytes()[..]);
+    }
+    fn read_be_bytes(bytes: &[u8]) -> Self {
+        f32::from_bits(u32::from_be_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]))
+    }
+}
+
+impl ByteStructImpl for f64 {
+    const BYTE_LEN: usize = 8;
+    fn write_le_bytes(&self, bytes: &mut [u8]) {
+        bytes.copy_from_slice(&self.clone().to_bits().to_le_bytes()[..]);
+    }
+    fn read_le_bytes(bytes: &[u8]) -> Self {
+        f64::from_bits(u64::from_le_bytes([
+            bytes[0], bytes[1], bytes[2], bytes[3],
+            bytes[4], bytes[5], bytes[6], bytes[7]]))
+    }
+    fn write_be_bytes(&self, bytes: &mut [u8]) {
+        bytes.copy_from_slice(&self.clone().to_bits().to_be_bytes()[..]);
+    }
+    fn read_be_bytes(bytes: &[u8]) -> Self {
+        f64::from_bits(u64::from_le_bytes([
+            bytes[0], bytes[1], bytes[2], bytes[3],
+            bytes[4], bytes[5], bytes[6], bytes[7]]))
+    }
+}
+
 macro_rules! byte_struct_array {
     ($x:expr) => {
         impl<T: ByteStructImpl + Copy + Default> ByteStructImpl for [T; $x] {
