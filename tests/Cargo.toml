@@ -3,6 +3,7 @@ name = "tests"
 version = "0.1.0"
 authors = ["Weiyi Wang <wwylele@gmail.com>"]
 edition = "2018"
+publish = false
 
 [dependencies]
 byte_struct = {path = "../byte_struct"}
