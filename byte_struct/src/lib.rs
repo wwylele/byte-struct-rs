@@ -291,10 +291,21 @@ byte_struct_array!(3000);
 
 #[macro_export]
 macro_rules! bitfields{
-    ($visibility:vis $name:ident : $base:ty {$($field_vis:vis $field_name:ident : $field_len:expr),+ $(,)? }) => {
-        #[derive(PartialEq, Debug, Default, Copy, Clone, Hash)]
+    (
+        $(#[$outer:meta])*
+        $visibility:vis $name:ident : $base:ty {
+            $(
+                $(#[$inner:ident $($args:tt)*])*
+                $field_vis:vis $field_name:ident : $field_len:expr
+            ),+ $(,)?
+        }
+    ) => {
+        $(#[$outer])*
         $visibility struct $name {
-            $($field_vis $field_name: $base),*
+            $(
+                $(#[$inner $($args)*])*
+                $field_vis $field_name: $base
+            ),*
         }
 
         impl $name {

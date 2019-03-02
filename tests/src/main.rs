@@ -1,6 +1,7 @@
 use byte_struct::*;
 
 bitfields!(
+    #[derive(PartialEq, Debug)]
     TestBitfield: u16 {
         x: 4,
         pub y: 8,
