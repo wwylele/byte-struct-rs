@@ -6,6 +6,7 @@ edition = "2018"
 license = "MIT OR Apache-2.0"
 description = "Derive macro for byte_struct"
 repository = "https://github.com/wwylele/byte-struct-rs"
+readme = "../README.md"
 
 [lib]
 proc-macro = true
