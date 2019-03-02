@@ -1,6 +1,6 @@
 # Byte Struct
 
-struct <-> byte sequence in Rust. A simple (de)serializer for struct in packed binary format. Also supports bit fields!
+Pack and unpack structure as raw bytes with packed or bit field layout.
 
 ## License
 

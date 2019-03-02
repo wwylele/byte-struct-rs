@@ -10,11 +10,22 @@ enum Endianness {
     Big,
 }
 
+
+/// Derives trait `ByteStruct` for a data structure with byte order specified as little-endian
+///
+/// The byte order specification is only applied to members that don't have default byte order
+/// (e.g. primitive types). For nested structure, the byte order specified for the child structure
+/// is preserved.
 #[proc_macro_derive(ByteStructLE)]
 pub fn byte_struct_le_macro_derive(input: TokenStream) -> TokenStream {
     byte_struct_macro_derive_impl(input, Endianness::Little)
 }
 
+/// Derives trait `ByteStruct` for a data structure with byte order specified as big-endian
+///
+/// The byte order specification is only applied to members that don't have default byte order
+/// (e.g. primitive types). For nested structure, the byte order specified for the child structure
+/// is preserved.
 #[proc_macro_derive(ByteStructBE)]
 pub fn byte_struct_be_macro_derive(input: TokenStream) -> TokenStream {
     byte_struct_macro_derive_impl(input, Endianness::Big)
