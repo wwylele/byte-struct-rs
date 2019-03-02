@@ -1,6 +1,6 @@
 [package]
 name = "byte_struct"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Weiyi Wang <wwylele@gmail.com>"]
 edition = "2018"
 license = "MIT OR Apache-2.0"
@@ -10,6 +10,6 @@ keywords = ["struct", "bitfield", "serialization"]
 categories = ["encoding"]
 
 [dependencies]
-byte_struct_derive = { version = "0.1.0", path = "../byte_struct_derive" }
+byte_struct_derive = { version = "0.2.0", path = "../byte_struct_derive" }
 
 [dev-dependencies]
