@@ -1,0 +1,7 @@
+[workspace]
+
+members = [
+    "byte_struct",
+    "byte_struct_derive",
+    "tests",
+]
