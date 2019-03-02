@@ -29,23 +29,19 @@ fn byte_struct_macro_derive_impl(input: TokenStream, endianness: Endianness) -> 
 
         let mut ty0 = Vec::<syn::Type>::new();
         let mut ident1 = Vec::<syn::Ident>::new();
-        let mut write_bytes_fn = Vec::<syn::Ident>::new();
-        let mut read_bytes_fn = Vec::<syn::Ident>::new();
 
         for n in named {
             ty0.push(n.ty.clone());
             ident1.push(n.ident.unwrap().clone());
-            match endianness {
-                Endianness::Little =>{
-                    write_bytes_fn.push(syn::Ident::new("write_le_bytes", Span::call_site()));
-                    read_bytes_fn.push(syn::Ident::new("read_le_bytes", Span::call_site()));
-                },
-                Endianness::Big =>{
-                    write_bytes_fn.push(syn::Ident::new("write_be_bytes", Span::call_site()));
-                    read_bytes_fn.push(syn::Ident::new("read_be_bytes", Span::call_site()));
-                },
-            }
         }
+
+        let (write_bytes_name, read_bytes_name) = match endianness {
+            Endianness::Little => ("write_le_bytes", "read_le_bytes"),
+            Endianness::Big => ("write_be_bytes", "read_be_bytes"),
+        };
+
+        let write_bytes_fn = vec![syn::Ident::new(write_bytes_name, Span::call_site()); ty0.len()];
+        let read_bytes_fn = vec![syn::Ident::new(read_bytes_name, Span::call_site()); ty0.len()];
 
         // quote! seems not liking using the same object twice in the content
         let ty1 = ty0.clone();
