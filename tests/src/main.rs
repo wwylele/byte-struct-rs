@@ -12,7 +12,7 @@ bitfields!(
 #[derive(ByteStructBE, PartialEq, Debug)]
 struct TestSubStruct {
     b: u16,
-    c: TestBitfield,
+    c: [TestBitfield; 2],
 }
 
 #[derive(ByteStructLE, PartialEq, Debug)]
@@ -29,17 +29,24 @@ struct TestStruct {
 
 #[test]
 fn main() {
-    assert_eq!(TestStruct::BYTE_LEN, 51);
-    let mut data = [0; 51];
+    assert_eq!(TestStruct::BYTE_LEN, 53);
+    let mut data = [0; TestStruct::BYTE_LEN];
     let s = TestStruct {
         a: 0x12,
         s: TestSubStruct {
             b: 0x3456,
-            c: TestBitfield {
-                x: 0xf,
-                y: 0x8f,
-                z: 0x7
-            },
+            c: [
+                TestBitfield {
+                    x: 0xf,
+                    y: 0x8f,
+                    z: 0x7
+                },
+                TestBitfield {
+                    x: 0x1,
+                    y: 0x23,
+                    z: 0x4
+                },
+            ],
         },
         d: [0x1020, 0x3040, 0x5060],
         e: 0x9abcdef0,
@@ -53,6 +60,7 @@ fn main() {
         0x12,
             0x34, 0x56,
             0x78, 0xff,
+            0x42, 0x31,
         0x20, 0x10, 0x40, 0x30, 0x60, 0x50,
         0xf0, 0xde, 0xbc, 0x9a,
         0xef, 0xcd, 0xab, 0x89, 0x67, 0x45, 0x23, 0x01,
@@ -65,6 +73,7 @@ fn main() {
         0x00,
             0x11, 0x22,
             0x33, 0x44,
+            0x17, 0x28,
         0x44, 0x55, 0x66, 0x77, 0x88, 0x99,
         0xaa, 0xbb, 0xcc, 0xdd,
         0x10, 0x20, 0x30, 0x40, 0x51, 0x61, 0x71, 0x81,
@@ -77,11 +86,18 @@ fn main() {
         a: 0x00,
         s: TestSubStruct {
             b: 0x1122,
-            c: TestBitfield {
-                x: 0x4,
-                y: 0x34,
-                z: 0x3
-            },
+            c: [
+                TestBitfield {
+                    x: 0x4,
+                    y: 0x34,
+                    z: 0x3
+                },
+                TestBitfield {
+                    x: 0x8,
+                    y: 0x72,
+                    z: 0x1
+                },
+            ]
         },
         d: [0x5544, 0x7766, 0x9988],
         e: 0xddccbbaa,

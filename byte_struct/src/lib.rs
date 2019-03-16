@@ -66,9 +66,8 @@ pub trait ByteStruct {
 ///
 /// This trait is implemented for most numeric primitive types,
 /// except for `bool`, `char`, `isize` and `usize`.
-/// This is also implemented for array types with size from 1 to 32 (inclusive).
-/// The element type of the array must implement trait Copy and Default, however,
-/// due to implementation limitation.
+/// This is also implemented for array types whose element type implements `ByteStructImpl`
+/// and whose size is between 1 and 32 (inclusive).
 ///
 /// This trait is also implemented for struct with either `#[derive(ByteStructLE)]` or `#[derive(ByteStructBE)]`.
 ///
@@ -322,7 +321,7 @@ impl ByteStructImpl for f64 {
 
 macro_rules! byte_struct_array {
     ($x:expr) => {
-        impl<T: ByteStructImpl + Copy + Default> ByteStructImpl for [T; $x] {
+        impl<T: ByteStructImpl> ByteStructImpl for [T; $x] {
             const BYTE_LEN: usize = ($x) * T::BYTE_LEN;
             fn write_le_bytes(&self, bytes: &mut [u8]) {
                 let mut pos = 0;
@@ -335,10 +334,13 @@ macro_rules! byte_struct_array {
             fn read_le_bytes(bytes: &[u8]) -> Self {
                 let mut pos = 0;
                 let len = T::BYTE_LEN;
-                let mut result = [T::default(); $x];
-                for i in 0 .. ($x) {
-                    result[i] = <T>::read_le_bytes(&bytes[pos .. pos + len]);
-                    pos += len;
+                let mut result: Self;
+                unsafe {
+                    result = std::mem::uninitialized();
+                    for i in 0 .. ($x) {
+                        std::ptr::write(&mut result[i], <T>::read_le_bytes(&bytes[pos .. pos + len]));
+                        pos += len;
+                    }
                 }
                 result
             }
@@ -353,10 +355,13 @@ macro_rules! byte_struct_array {
             fn read_be_bytes(bytes: &[u8]) -> Self {
                 let mut pos = 0;
                 let len = T::BYTE_LEN;
-                let mut result = [T::default(); $x];
-                for i in 0 .. ($x) {
-                    result[i] = <T>::read_be_bytes(&bytes[pos .. pos + len]);
-                    pos += len;
+                let mut result: Self;
+                unsafe {
+                    result = std::mem::uninitialized();
+                    for i in 0 .. ($x) {
+                        std::ptr::write(&mut result[i], <T>::read_be_bytes(&bytes[pos .. pos + len]));
+                        pos += len;
+                    }
                 }
                 result
             }
