@@ -16,7 +16,8 @@ bitfields!(
     }
 );
 
-#[derive(ByteStructLE, PartialEq, Debug)]
+#[derive(ByteStruct, PartialEq, Debug)]
+#[byte_struct_le]
 struct GIFLogicalScreenDescriptor {
     width: u16,
     height: u16,
