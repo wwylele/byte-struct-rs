@@ -48,7 +48,7 @@
 //! }
 //! ```
 
-pub use byte_struct_derive::*;
+pub use byte_struct_derive::{ByteStruct, ByteStructBE, ByteStructLE};
 
 /// A type that can be packed into or unpacked from fixed-size bytes, but the method is unknown yet.
 pub trait ByteStructLen {
@@ -58,9 +58,9 @@ pub trait ByteStructLen {
 
 /// A data structure that can be packed into or unpacked from raw bytes.
 ///
-/// This trait can be derived by either `#[derive(ByteStructLE)]` or `#[derive(ByteStructBE)]`.
-/// The difference between two macros is byte order specification. `LE` is for little-endian,
-/// and `BE` is for big-endian. All members of the struct to derive must implement `ByteStructUnspecifiedByteOrder`.
+/// This trait can be derived by
+/// [`#[derive(ByteStruct)]`](https://docs.rs/byte_struct_derive/*/byte_struct_derive/derive.ByteStruct.html).
+///
 /// One can implement this trait for custom types in order to pack or unpack an object in a special way.
 pub trait ByteStruct: ByteStructLen {
     /// Packs the struct into raw bytes and write to a slice
@@ -78,23 +78,25 @@ pub trait ByteStruct: ByteStructLen {
 /// This is also implemented for array types whose element type implements `ByteStructUnspecifiedByteOrder`
 /// and whose size is between 1 and 32 (inclusive).
 ///
-/// This trait is automatically implemented for all types that implements `ByteStruct`.
-/// In this case, all members of `ByteStructUnspecifiedByteOrder` are direct wrappers of `ByteStruct` members.
+/// This trait is automatically implemented for all types that implements [`ByteStruct`].
+/// In this case, all members of `ByteStructUnspecifiedByteOrder` are direct wrappers of [`ByteStruct`] members.
 ///
 /// Members in this trait are meant to be called by byte_struct internal only.
 /// They do not do what one might expect:
 /// the byte orders specified in `read_bytes_default_*` / `write_bytes_default_*` functions
 /// are only **default byte orders**.
-/// The default byte order is only repected when the type itself does not carry byte order specification
+/// The default byte order is only respected when the type itself does not carry byte order specification
 /// (e.g. primitive types).
-/// In contrast, since `ByteStruct` types always have fixed packing method,
+/// In contrast, since [`ByteStruct`] types always have fixed packing method,
 /// the default byte order has no effect on them, and the three versions of read / write functions for them,
-/// `_default_le`, `_default_be` and no-spec from `ByteStruct`, behave exactly the same.
+/// `_default_le`, `_default_be` and no-spec from [`ByteStruct`], behave exactly the same.
 ///
 /// One can implement this trait for custom types in order to pack or unpack an object in a special way,
 /// but only when the said type changes its packing method depending on the default byte order.
 /// An example for this is a custom fixed-size large integer type.
-/// If the packing method is independent from the default byte order, please implement `ByteStruct` instead.
+/// If the packing method is independent from the default byte order, please implement [`ByteStruct`] instead.
+///
+/// [`ByteStruct`]: trait.ByteStruct.html
 pub trait ByteStructUnspecifiedByteOrder: ByteStructLen {
     /// Packs the object into raw bytes with little-endian as the default byte order
     fn write_bytes_default_le(&self, bytes: &mut [u8]);
@@ -110,22 +112,22 @@ pub trait ByteStructUnspecifiedByteOrder: ByteStructLen {
 }
 
 impl<T: ByteStruct> ByteStructUnspecifiedByteOrder for T {
-    /// A wrapper of `ByteStruct::write_bytes`
+    /// A wrapper of [`ByteStruct::write_bytes`](trait.ByteStruct.html#tymethod.write_bytes)
     fn write_bytes_default_le(&self, bytes: &mut [u8]) {
         self.write_bytes(bytes);
     }
 
-    /// A wrapper of `ByteStruct::read_bytes`
+    /// A wrapper of [`ByteStruct::read_bytes`](trait.ByteStruct.html#tymethod.read_bytes)
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         Self::read_bytes(bytes)
     }
 
-    /// A wrapper of `ByteStruct::write_bytes`
+    /// A wrapper of [`ByteStruct::write_bytes`](trait.ByteStruct.html#tymethod.write_bytes)
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
         self.write_bytes(bytes);
     }
 
-    /// A wrapper of `ByteStruct::read_bytes`
+    /// A wrapper of [`ByteStruct::read_bytes`](trait.ByteStruct.html#tymethod.read_bytes)
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         Self::read_bytes(bytes)
     }
@@ -452,16 +454,18 @@ bsa5!(1);
 byte_struct_array!(100);
 byte_struct_array!(3000);
 
-/// Generates a structure that implements `ByteStructUnspecifiedByteOrder` with bit field semantics.
+/// Generates a structure that implements [`ByteStructUnspecifiedByteOrder`] with bit field semantics.
 ///
 /// The bit fields are packed to / unpacked from the base integer type,
-/// which is then packed / unpacked using the primitive type's `ByteStructUnspecifiedByteOrder` implementation.
+/// which is then packed / unpacked using the primitive type's [`ByteStructUnspecifiedByteOrder`] implementation.
 /// Therefore, the byte order of bit fields is unspecified internally, and is only specified
-/// by the parent structure that derives `ByteStructLE`, `ByteStructBE`, just like all primitive
+/// by the parent structure that derives [`ByteStruct`](trait.ByteStruct.html), just like all primitive
 /// types.
 ///
 /// Note that the memory representation of the generated structure during runtime is NOT in bit field layout.
 /// This macro only provides conversion method between the plain structure and the bit-field-packed bytes.
+///
+/// [`ByteStructUnspecifiedByteOrder`]: trait.ByteStructUnspecifiedByteOrder.html
 ///
 /// # Example
 /// ```

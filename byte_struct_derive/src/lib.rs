@@ -1,3 +1,12 @@
+//! # Derive macro for Byte Struct
+//!
+//! This crate provides macros for deriving the [`ByteStruct`] trait
+//! defined in the [`byte_struct` crate](https://docs.rs/byte_struct).
+//!
+//! See [`#[derive(ByteStruct)]`](derive.ByteStruct.html) for using the macro.
+//!
+//! [`ByteStruct`]: https://docs.rs/byte_struct/*/byte_struct/trait.ByteStruct.html
+
 #![recursion_limit = "128"]
 extern crate proc_macro;
 
@@ -12,19 +21,19 @@ enum Endianness {
     Unspecified,
 }
 
-/// Derives trait `ByteStruct` for a data structure.
+/// Derives trait [`ByteStruct`] for a data structure.
 ///
-/// Requires all members to implement `ByteStructUnspecifiedByteOrder`.
-/// This includes most primitive types and nested structures with `ByteStruct` derived
-/// (because `ByteStruct` is automatically implemented for `ByteStructUnspecifiedByteOrder` types)
+/// Requires all members to implement [`ByteStructUnspecifiedByteOrder`].
+/// This includes most primitive types and nested structures with [`ByteStruct`] derived
+/// (because [`ByteStructUnspecifiedByteOrder`] is automatically implemented for [`ByteStruct`] types)
 ///
 /// Byte order attributes `#[byte_struct_le]` or `#[byte_struct_be]` can be attached to individual fields
 /// and/or the entire structure.
 ///
 /// When a byte order attribute are attached to a field, it selects which byte order version
-/// of `ByteStructUnspecifiedByteOrder` member functions to use on the field
+/// of [`ByteStructUnspecifiedByteOrder`] member functions to use on the field
 /// In other words, the attribute specifies the byte order on an byte-order-unspecified type.
-/// These attributes have no effect on fields that implements `ByteStruct`,
+/// These attributes have no effect on fields that implements [`ByteStruct`],
 /// because they always have the same byte packing method regardless of externally specified byte order.
 ///
 /// When a byte order attribute is attached to the entire struct,
@@ -32,8 +41,11 @@ enum Endianness {
 ///
 /// If a field has no byte order attribute specified
 /// (either explicitly attached to the field or implicitly by the attribute on the entire structure),
-/// it must implement `ByteStruct` as well, so that its packing method is not byte-order-dependent.
+/// it must implement [`ByteStruct`] as well, so that its packing method is not byte-order-dependent.
 /// This is true for all `ByteStruct`-derived structures, but not for primitive types.
+///
+/// [`ByteStruct`]: https://docs.rs/byte_struct/*/byte_struct/trait.ByteStruct.html
+/// [`ByteStructUnspecifiedByteOrder`]: https://docs.rs/byte_struct/*/byte_struct/trait.ByteStructUnspecifiedByteOrder.html
 ///
 /// ## Example
 /// ```
@@ -84,7 +96,7 @@ pub fn byte_struct_macro_derive(input: TokenStream) -> TokenStream {
     byte_struct_macro_derive_impl(input, Endianness::Unspecified)
 }
 
-/// Same effect as `#[derive(ByteStruct)] #[byte_struct_le]`
+/// Same effect as [`#[derive(ByteStruct)] #[byte_struct_le]`](derive.ByteStruct.html)
 ///
 /// But doesn't support byte order attributes on fields
 #[deprecated]
@@ -93,7 +105,7 @@ pub fn byte_struct_le_macro_derive(input: TokenStream) -> TokenStream {
     byte_struct_macro_derive_impl(input, Endianness::Little)
 }
 
-/// Same effect as `#[derive(ByteStruct)] #[byte_struct_be]`
+/// Same effect as [`#[derive(ByteStruct)] #[byte_struct_be]`](derive.ByteStruct.html)
 ///
 /// But doesn't support byte order attributes on fields
 #[deprecated]
