@@ -59,7 +59,7 @@ pub trait ByteStructLen {
 /// This trait can be derived by either `#[derive(ByteStructLE)]` or `#[derive(ByteStructBE)]`.
 /// The difference between two macros is byte order specification. `LE` is for little-endian,
 /// and `BE` is for big-endian. All members of the struct to derive must implement `ByteStructImpl`.
-pub trait ByteStruct {
+pub trait ByteStruct: ByteStructLen {
     /// Packs the struct into raw bytes and write to a slice
     fn write_bytes(&self, bytes: &mut [u8]);
 
@@ -98,6 +98,24 @@ pub trait ByteStructImpl: ByteStructLen {
 
     /// Unpacks raw bytes into a new object with big-endian as the default byte order
     fn read_be_bytes(bytes: &[u8]) -> Self;
+}
+
+impl<T: ByteStruct> ByteStructImpl for T {
+    fn write_le_bytes(&self, bytes: &mut [u8]) {
+        self.write_bytes(bytes);
+    }
+
+    fn read_le_bytes(bytes: &[u8]) -> Self {
+        Self::read_bytes(bytes)
+    }
+
+    fn write_be_bytes(&self, bytes: &mut [u8]) {
+        self.write_bytes(bytes);
+    }
+
+    fn read_be_bytes(bytes: &[u8]) -> Self {
+        Self::read_bytes(bytes)
+    }
 }
 
 impl ByteStructLen for u8 {
