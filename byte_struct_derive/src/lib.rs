@@ -47,8 +47,8 @@ fn byte_struct_macro_derive_impl(input: TokenStream, endianness: Endianness) -> 
         }
 
         let (write_bytes_name, read_bytes_name) = match endianness {
-            Endianness::Little => ("write_le_bytes", "read_le_bytes"),
-            Endianness::Big => ("write_be_bytes", "read_be_bytes"),
+            Endianness::Little => ("write_bytes_default_le", "read_bytes_default_le"),
+            Endianness::Big => ("write_bytes_default_be", "read_bytes_default_be"),
         };
 
         let write_bytes_fn = vec![syn::Ident::new(write_bytes_name, Span::call_site()); ty0.len()];
