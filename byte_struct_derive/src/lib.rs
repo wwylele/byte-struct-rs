@@ -81,8 +81,11 @@ fn byte_struct_macro_derive_impl(input: TokenStream, endianness: Endianness) -> 
                 }
             }
 
-            impl ByteStructImpl for #name {
+            impl ByteStructLen for #name {
                 const BYTE_LEN: usize = #(<#ty0>::BYTE_LEN)+*;
+            }
+
+            impl ByteStructImpl for #name {
                 fn write_le_bytes(&self, bytes: &mut [u8]) {
                     self.write_bytes(bytes);
                 }

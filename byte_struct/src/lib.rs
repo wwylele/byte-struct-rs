@@ -49,6 +49,11 @@
 
 pub use byte_struct_derive::{ByteStructLE, ByteStructBE};
 
+pub trait ByteStructLen {
+    /// The length of the byte representation of this type
+    const BYTE_LEN: usize;
+}
+
 /// A data structure that can be packed into or unpacked from raw bytes.
 ///
 /// This trait can be derived by either `#[derive(ByteStructLE)]` or `#[derive(ByteStructBE)]`.
@@ -81,10 +86,7 @@ pub trait ByteStruct {
 ///
 /// In some cases, one might want to implement `ByteStructImpl` for custom types
 /// so that they can be members of `ByteStruct`-derived structures.
-pub trait ByteStructImpl {
-    /// The length of the byte representation of this type
-    const BYTE_LEN: usize;
-
+pub trait ByteStructImpl: ByteStructLen {
     /// Packs the object into raw bytes with little-endian as the default byte order
     fn write_le_bytes(&self, bytes: &mut [u8]);
 
@@ -98,8 +100,11 @@ pub trait ByteStructImpl {
     fn read_be_bytes(bytes: &[u8]) -> Self;
 }
 
-impl ByteStructImpl for u8 {
+impl ByteStructLen for u8 {
     const BYTE_LEN: usize = 1;
+}
+
+impl ByteStructImpl for u8 {
     fn write_le_bytes(&self, bytes: &mut [u8]) {
         bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
     }
@@ -114,8 +119,11 @@ impl ByteStructImpl for u8 {
     }
 }
 
-impl ByteStructImpl for i8 {
+impl ByteStructLen for i8 {
     const BYTE_LEN: usize = 1;
+}
+
+impl ByteStructImpl for i8 {
     fn write_le_bytes(&self, bytes: &mut [u8]) {
         bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
     }
@@ -130,8 +138,11 @@ impl ByteStructImpl for i8 {
     }
 }
 
-impl ByteStructImpl for u16 {
+impl ByteStructLen for u16 {
     const BYTE_LEN: usize = 2;
+}
+
+impl ByteStructImpl for u16 {
     fn write_le_bytes(&self, bytes: &mut [u8]) {
         bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
     }
@@ -146,8 +157,11 @@ impl ByteStructImpl for u16 {
     }
 }
 
-impl ByteStructImpl for i16 {
+impl ByteStructLen for i16 {
     const BYTE_LEN: usize = 2;
+}
+
+impl ByteStructImpl for i16 {
     fn write_le_bytes(&self, bytes: &mut [u8]) {
         bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
     }
@@ -162,8 +176,11 @@ impl ByteStructImpl for i16 {
     }
 }
 
-impl ByteStructImpl for u32 {
+impl ByteStructLen for u32 {
     const BYTE_LEN: usize = 4;
+}
+
+impl ByteStructImpl for u32 {
     fn write_le_bytes(&self, bytes: &mut [u8]) {
         bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
     }
@@ -178,8 +195,11 @@ impl ByteStructImpl for u32 {
     }
 }
 
-impl ByteStructImpl for i32 {
+impl ByteStructLen for i32 {
     const BYTE_LEN: usize = 4;
+}
+
+impl ByteStructImpl for i32 {
     fn write_le_bytes(&self, bytes: &mut [u8]) {
         bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
     }
@@ -194,8 +214,11 @@ impl ByteStructImpl for i32 {
     }
 }
 
-impl ByteStructImpl for u64 {
+impl ByteStructLen for u64 {
     const BYTE_LEN: usize = 8;
+}
+
+impl ByteStructImpl for u64 {
     fn write_le_bytes(&self, bytes: &mut [u8]) {
         bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
     }
@@ -214,8 +237,11 @@ impl ByteStructImpl for u64 {
     }
 }
 
-impl ByteStructImpl for i64 {
+impl ByteStructLen for i64 {
     const BYTE_LEN: usize = 8;
+}
+
+impl ByteStructImpl for i64 {
     fn write_le_bytes(&self, bytes: &mut [u8]) {
         bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
     }
@@ -234,8 +260,11 @@ impl ByteStructImpl for i64 {
     }
 }
 
-impl ByteStructImpl for u128 {
+impl ByteStructLen for u128 {
     const BYTE_LEN: usize = 16;
+}
+
+impl ByteStructImpl for u128 {
     fn write_le_bytes(&self, bytes: &mut [u8]) {
         bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
     }
@@ -259,8 +288,11 @@ impl ByteStructImpl for u128 {
     }
 }
 
-impl ByteStructImpl for i128 {
+impl ByteStructLen for i128 {
     const BYTE_LEN: usize = 16;
+}
+
+impl ByteStructImpl for i128 {
     fn write_le_bytes(&self, bytes: &mut [u8]) {
         bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
     }
@@ -283,8 +315,11 @@ impl ByteStructImpl for i128 {
     }
 }
 
-impl ByteStructImpl for f32 {
+impl ByteStructLen for f32 {
     const BYTE_LEN: usize = 4;
+}
+
+impl ByteStructImpl for f32 {
     fn write_le_bytes(&self, bytes: &mut [u8]) {
         bytes.copy_from_slice(&self.clone().to_bits().to_le_bytes()[..]);
     }
@@ -299,8 +334,11 @@ impl ByteStructImpl for f32 {
     }
 }
 
-impl ByteStructImpl for f64 {
+impl ByteStructLen for f64 {
     const BYTE_LEN: usize = 8;
+}
+
+impl ByteStructImpl for f64 {
     fn write_le_bytes(&self, bytes: &mut [u8]) {
         bytes.copy_from_slice(&self.clone().to_bits().to_le_bytes()[..]);
     }
@@ -321,8 +359,11 @@ impl ByteStructImpl for f64 {
 
 macro_rules! byte_struct_array {
     ($x:expr) => {
-        impl<T: ByteStructImpl> ByteStructImpl for [T; $x] {
+        impl<T: ByteStructLen> ByteStructLen for [T; $x] {
             const BYTE_LEN: usize = ($x) * T::BYTE_LEN;
+        }
+
+        impl<T: ByteStructImpl> ByteStructImpl for [T; $x] {
             fn write_le_bytes(&self, bytes: &mut [u8]) {
                 let mut pos = 0;
                 let len = T::BYTE_LEN;
@@ -473,8 +514,11 @@ macro_rules! bitfields{
             }
         }
 
-        impl ByteStructImpl for $name {
+        impl ByteStructLen for $name {
             const BYTE_LEN: usize = <$base>::BYTE_LEN;
+        }
+
+        impl ByteStructImpl for $name {
             fn write_le_bytes(&self, bytes: &mut [u8]) {
                 self.to_raw().write_le_bytes(bytes);
             }
