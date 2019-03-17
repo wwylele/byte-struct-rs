@@ -16,7 +16,8 @@
 //!     }
 //! );
 //!
-//! #[derive(ByteStructLE, PartialEq, Debug)]
+//! #[derive(ByteStruct, PartialEq, Debug)]
+//! #[byte_struct_le]
 //! struct GIFLogicalScreenDescriptor {
 //!     width: u16,
 //!     height: u16,
@@ -47,7 +48,7 @@
 //! }
 //! ```
 
-pub use byte_struct_derive::{ByteStructLE, ByteStructBE};
+pub use byte_struct_derive::*;
 
 /// A type that can be packed into or unpacked from fixed-size bytes, but the method is unknown yet.
 pub trait ByteStructLen {
