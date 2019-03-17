@@ -49,8 +49,9 @@
 
 pub use byte_struct_derive::{ByteStructLE, ByteStructBE};
 
+/// A type that can be packed into or unpacked from fixed-size bytes, but the method is unknown yet.
 pub trait ByteStructLen {
-    /// The length of the byte representation of this type
+    /// The length of the packed bytes of this type
     const BYTE_LEN: usize;
 }
 
@@ -59,6 +60,7 @@ pub trait ByteStructLen {
 /// This trait can be derived by either `#[derive(ByteStructLE)]` or `#[derive(ByteStructBE)]`.
 /// The difference between two macros is byte order specification. `LE` is for little-endian,
 /// and `BE` is for big-endian. All members of the struct to derive must implement `ByteStructUnspecifiedByteOrder`.
+/// One can implement this trait for custom types in order to pack or unpack an object in a special way.
 pub trait ByteStruct: ByteStructLen {
     /// Packs the struct into raw bytes and write to a slice
     fn write_bytes(&self, bytes: &mut [u8]);
@@ -71,21 +73,27 @@ pub trait ByteStruct: ByteStructLen {
 ///
 /// This trait is implemented for most numeric primitive types,
 /// except for `bool`, `char`, `isize` and `usize`.
+///
 /// This is also implemented for array types whose element type implements `ByteStructUnspecifiedByteOrder`
 /// and whose size is between 1 and 32 (inclusive).
 ///
-/// This trait is also implemented for struct with either `#[derive(ByteStructLE)]` or `#[derive(ByteStructBE)]`.
+/// This trait is automatically implemented for all types that implements `ByteStruct`.
+/// In this case, all members of `ByteStructUnspecifiedByteOrder` are direct wrappers of `ByteStruct` members.
 ///
-/// Members in this trait, except for `BYTE_LEN`, are meant to be used by byte_struct internal only.
+/// Members in this trait are meant to be called by byte_struct internal only.
 /// They do not do what one might expect:
-/// the byte orders specified in `read_*_bytes`/`write_*_bytes` functions are only **default byte order**.
+/// the byte orders specified in `read_bytes_default_*` / `write_bytes_default_*` functions
+/// are only **default byte orders**.
 /// The default byte order is only repected when the type itself does not carry byte order specification
-/// (e.g. primitive types). In contrast, since `ByteStruct`-derived structures always have byte order specification,
-/// the default byte order has no effect on them, and the three versions of read / write functions,
-/// `_le_`, `_be_` and no-spec from `ByteStruct`, behave exactly the same.
+/// (e.g. primitive types).
+/// In contrast, since `ByteStruct` types always have fixed packing method,
+/// the default byte order has no effect on them, and the three versions of read / write functions for them,
+/// `_default_le`, `_default_be` and no-spec from `ByteStruct`, behave exactly the same.
 ///
-/// In some cases, one might want to implement `ByteStructUnspecifiedByteOrder` for custom types
-/// so that they can be members of `ByteStruct`-derived structures.
+/// One can implement this trait for custom types in order to pack or unpack an object in a special way,
+/// but only when the said type changes its packing method depending on the default byte order.
+/// An example for this is a custom fixed-size large integer type.
+/// If the packing method is independent from the default byte order, please implement `ByteStruct` instead.
 pub trait ByteStructUnspecifiedByteOrder: ByteStructLen {
     /// Packs the object into raw bytes with little-endian as the default byte order
     fn write_bytes_default_le(&self, bytes: &mut [u8]);
@@ -101,18 +109,22 @@ pub trait ByteStructUnspecifiedByteOrder: ByteStructLen {
 }
 
 impl<T: ByteStruct> ByteStructUnspecifiedByteOrder for T {
+    /// A wrapper of `ByteStruct::write_bytes`
     fn write_bytes_default_le(&self, bytes: &mut [u8]) {
         self.write_bytes(bytes);
     }
 
+    /// A wrapper of `ByteStruct::read_bytes`
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         Self::read_bytes(bytes)
     }
 
+    /// A wrapper of `ByteStruct::write_bytes`
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
         self.write_bytes(bytes);
     }
 
+    /// A wrapper of `ByteStruct::read_bytes`
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         Self::read_bytes(bytes)
     }
