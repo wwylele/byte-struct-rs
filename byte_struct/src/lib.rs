@@ -49,6 +49,7 @@
 //! ```
 
 pub use byte_struct_derive::{ByteStruct, ByteStructBE, ByteStructLE};
+use generic_array::*;
 
 /// A type that can be packed into or unpacked from fixed-size bytes, but the method is unknown yet.
 pub trait ByteStructLen {
@@ -454,6 +455,55 @@ bsa5!(1);
 byte_struct_array!(100);
 byte_struct_array!(3000);
 
+impl<T: ByteStructLen, U: ArrayLength<T>> ByteStructLen for GenericArray<T, U> {
+    const BYTE_LEN: usize = T::BYTE_LEN * U::USIZE;
+}
+
+impl<T: ByteStructUnspecifiedByteOrder, U: ArrayLength<T>> ByteStructUnspecifiedByteOrder for GenericArray<T, U> {
+    fn write_bytes_default_le(&self, bytes: &mut [u8]) {
+        let mut pos = 0;
+        let len = T::BYTE_LEN;
+        for i in 0 .. U::USIZE {
+            self[i].write_bytes_default_le(&mut bytes[pos .. pos + len]);
+            pos += len;
+        }
+    }
+    fn read_bytes_default_le(bytes: &[u8]) -> Self {
+        let mut pos = 0;
+        let len = T::BYTE_LEN;
+        let mut result: Self;
+        unsafe {
+            result = std::mem::uninitialized();
+            for i in 0 .. U::USIZE {
+                std::ptr::write(&mut result[i], <T>::read_bytes_default_le(&bytes[pos .. pos + len]));
+                pos += len;
+            }
+        }
+        result
+    }
+    fn write_bytes_default_be(&self, bytes: &mut [u8]) {
+        let mut pos = 0;
+        let len = T::BYTE_LEN;
+        for i in 0 .. U::USIZE {
+            self[i].write_bytes_default_be(&mut bytes[pos .. pos + len]);
+            pos += len;
+        }
+    }
+    fn read_bytes_default_be(bytes: &[u8]) -> Self {
+        let mut pos = 0;
+        let len = T::BYTE_LEN;
+        let mut result: Self;
+        unsafe {
+            result = std::mem::uninitialized();
+            for i in 0 .. U::USIZE {
+                std::ptr::write(&mut result[i], <T>::read_bytes_default_be(&bytes[pos .. pos + len]));
+                pos += len;
+            }
+        }
+        result
+    }
+}
+
 /// Generates a structure that implements [`ByteStructUnspecifiedByteOrder`] with bit field semantics.
 ///
 /// The bit fields are packed to / unpacked from the base integer type,
@@ -468,7 +518,7 @@ byte_struct_array!(3000);
 /// [`ByteStructUnspecifiedByteOrder`]: trait.ByteStructUnspecifiedByteOrder.html
 ///
 /// # Example
-/// ```
+/// ```ignore
 /// bitfields!(
 ///     // Specifies the struct name and the base type.
 ///     // The base type must be one of unsigned integer types.

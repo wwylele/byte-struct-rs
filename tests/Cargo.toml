@@ -7,3 +7,4 @@ publish = false
 
 [dependencies]
 byte_struct = {path = "../byte_struct"}
+generic-array = "0.13"

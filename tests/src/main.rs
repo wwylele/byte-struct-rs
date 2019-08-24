@@ -1,4 +1,5 @@
 use byte_struct::*;
+use generic_array::*;
 
 bitfields!(
     #[derive(PartialEq, Debug)]
@@ -33,7 +34,7 @@ struct TestSubStruct3 {
 struct TestStruct {
     a: u8,
     s: TestSubStruct3,
-    d: [u16; 3],
+    d: GenericArray<u16, typenum::U3>,
     e: u32,
     f: u64,
     #[byte_struct_be] g: u128,
@@ -68,7 +69,7 @@ fn main() {
                 v: 0x5040
             },
         },
-        d: [0x1020, 0x3040, 0x5060],
+        d: *GenericArray::from_slice(&[0x1020, 0x3040, 0x5060]),
         e: 0x9abcdef0,
         f: 0x0123456789ABCDEF,
         g: 0xffeeddccbbaa99887766554433221100,
@@ -129,7 +130,7 @@ fn main() {
                 v: 0xfedc,
             },
         },
-        d: [0x5544, 0x7766, 0x9988],
+        d: *GenericArray::from_slice(&[0x5544, 0x7766, 0x9988]),
         e: 0xddccbbaa,
         f: 0x8171615140302010,
         g: 0x11121314252627283132333445464748,

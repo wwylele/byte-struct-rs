@@ -48,7 +48,7 @@ enum Endianness {
 /// [`ByteStructUnspecifiedByteOrder`]: https://docs.rs/byte_struct/*/byte_struct/trait.ByteStructUnspecifiedByteOrder.html
 ///
 /// ## Example
-/// ```
+/// ```ignore
 /// #[derive(ByteStruct)]
 /// #[byte_struct_le]
 /// struct Struct1 {
