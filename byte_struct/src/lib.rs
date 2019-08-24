@@ -49,7 +49,7 @@
 //! ```
 
 pub use byte_struct_derive::{ByteStruct, ByteStructBE, ByteStructLE};
-use generic_array::*;
+pub use generic_array::*;
 
 /// A type that can be packed into or unpacked from fixed-size bytes, but the method is unknown yet.
 pub trait ByteStructLen {
@@ -77,7 +77,8 @@ pub trait ByteStruct: ByteStructLen {
 /// except for `bool`, `char`, `isize` and `usize`.
 ///
 /// This is also implemented for array types whose element type implements `ByteStructUnspecifiedByteOrder`
-/// and whose size is between 1 and 32 (inclusive).
+/// and whose size is between 1 and 32 (inclusive). Similarly, this is implemented for `GenericArray` types (
+/// re-expored from generic-array crate) for the same element type and for all sizes.
 ///
 /// This trait is automatically implemented for all types that implements [`ByteStruct`].
 /// In this case, all members of `ByteStructUnspecifiedByteOrder` are direct wrappers of [`ByteStruct`] members.
@@ -455,7 +456,7 @@ bsa5!(1);
 byte_struct_array!(100);
 byte_struct_array!(3000);
 
-impl<T: ByteStructLen, U: ArrayLength<T>> ByteStructLen for GenericArray<T, U> {
+impl<T: ByteStructLen, U: ArrayLength<T>> ByteStructLen for generic_array::GenericArray<T, U> {
     const BYTE_LEN: usize = T::BYTE_LEN * U::USIZE;
 }
 
@@ -469,17 +470,7 @@ impl<T: ByteStructUnspecifiedByteOrder, U: ArrayLength<T>> ByteStructUnspecified
         }
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
-        let mut pos = 0;
-        let len = T::BYTE_LEN;
-        let mut result: Self;
-        unsafe {
-            result = std::mem::uninitialized();
-            for i in 0 .. U::USIZE {
-                std::ptr::write(&mut result[i], <T>::read_bytes_default_le(&bytes[pos .. pos + len]));
-                pos += len;
-            }
-        }
-        result
+        Self::from_exact_iter(bytes.chunks_exact(T::BYTE_LEN).map(T::read_bytes_default_le)).unwrap()
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
         let mut pos = 0;
@@ -490,17 +481,7 @@ impl<T: ByteStructUnspecifiedByteOrder, U: ArrayLength<T>> ByteStructUnspecified
         }
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
-        let mut pos = 0;
-        let len = T::BYTE_LEN;
-        let mut result: Self;
-        unsafe {
-            result = std::mem::uninitialized();
-            for i in 0 .. U::USIZE {
-                std::ptr::write(&mut result[i], <T>::read_bytes_default_be(&bytes[pos .. pos + len]));
-                pos += len;
-            }
-        }
-        result
+        Self::from_exact_iter(bytes.chunks_exact(T::BYTE_LEN).map(T::read_bytes_default_be)).unwrap()
     }
 }
 

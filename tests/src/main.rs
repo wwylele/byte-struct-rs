@@ -1,5 +1,4 @@
 use byte_struct::*;
-use generic_array::*;
 
 bitfields!(
     #[derive(PartialEq, Debug)]
