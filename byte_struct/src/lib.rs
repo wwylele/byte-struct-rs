@@ -51,6 +51,8 @@
 pub use byte_struct_derive::{ByteStruct, ByteStructBE, ByteStructLE};
 pub use generic_array::*;
 
+use std::convert::TryInto;
+
 /// A type that can be packed into or unpacked from fixed-size bytes, but the method is unknown yet.
 pub trait ByteStructLen {
     /// The length of the packed bytes of this type
@@ -408,17 +410,10 @@ macro_rules! byte_struct_array {
                 }
             }
             fn read_bytes_default_le(bytes: &[u8]) -> Self {
-                let mut pos = 0;
                 let len = T::BYTE_LEN;
-                let mut result: Self;
-                unsafe {
-                    result = std::mem::uninitialized();
-                    for i in 0 .. ($x) {
-                        std::ptr::write(&mut result[i], <T>::read_bytes_default_le(&bytes[pos .. pos + len]));
-                        pos += len;
-                    }
-                }
-                result
+                (0 .. ($x)).map(|i| {
+                    <T>::read_bytes_default_le(&bytes[i * len .. (i + 1) * len])
+                }).collect::<Vec<_>>().try_into().map_err(|_|()).unwrap()
             }
             fn write_bytes_default_be(&self, bytes: &mut [u8]) {
                 let mut pos = 0;
@@ -429,17 +424,10 @@ macro_rules! byte_struct_array {
                 }
             }
             fn read_bytes_default_be(bytes: &[u8]) -> Self {
-                let mut pos = 0;
                 let len = T::BYTE_LEN;
-                let mut result: Self;
-                unsafe {
-                    result = std::mem::uninitialized();
-                    for i in 0 .. ($x) {
-                        std::ptr::write(&mut result[i], <T>::read_bytes_default_be(&bytes[pos .. pos + len]));
-                        pos += len;
-                    }
-                }
-                result
+                (0 .. ($x)).map(|i| {
+                    <T>::read_bytes_default_be(&bytes[i * len .. (i + 1) * len])
+                }).collect::<Vec<_>>().try_into().map_err(|_|()).unwrap()
             }
         }
     }
