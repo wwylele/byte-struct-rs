@@ -49,9 +49,6 @@
 //! ```
 
 pub use byte_struct_derive::{ByteStruct, ByteStructBE, ByteStructLE};
-pub use generic_array::*;
-
-use std::convert::TryInto;
 
 /// A type that can be packed into or unpacked from fixed-size bytes, but the method is unknown yet.
 pub trait ByteStructLen {
@@ -261,16 +258,16 @@ impl ByteStructUnspecifiedByteOrder for u64 {
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         u64::from_le_bytes([
-            bytes[0], bytes[1], bytes[2], bytes[3],
-            bytes[4], bytes[5], bytes[6], bytes[7]])
+            bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7],
+        ])
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
         bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         u64::from_be_bytes([
-            bytes[0], bytes[1], bytes[2], bytes[3],
-            bytes[4], bytes[5], bytes[6], bytes[7]])
+            bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7],
+        ])
     }
 }
 
@@ -284,16 +281,16 @@ impl ByteStructUnspecifiedByteOrder for i64 {
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         i64::from_le_bytes([
-            bytes[0], bytes[1], bytes[2], bytes[3],
-            bytes[4], bytes[5], bytes[6], bytes[7]])
+            bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7],
+        ])
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
         bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         i64::from_be_bytes([
-            bytes[0], bytes[1], bytes[2], bytes[3],
-            bytes[4], bytes[5], bytes[6], bytes[7]])
+            bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7],
+        ])
     }
 }
 
@@ -307,21 +304,18 @@ impl ByteStructUnspecifiedByteOrder for u128 {
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         u128::from_le_bytes([
-            bytes[0], bytes[1], bytes[2], bytes[3],
-            bytes[4], bytes[5], bytes[6], bytes[7],
-            bytes[8], bytes[9], bytes[10], bytes[11],
-            bytes[12], bytes[13], bytes[14], bytes[15],
-            ])
+            bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7],
+            bytes[8], bytes[9], bytes[10], bytes[11], bytes[12], bytes[13], bytes[14], bytes[15],
+        ])
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
         bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         u128::from_be_bytes([
-            bytes[0], bytes[1], bytes[2], bytes[3],
-            bytes[4], bytes[5], bytes[6], bytes[7],
-            bytes[8], bytes[9], bytes[10], bytes[11],
-            bytes[12], bytes[13], bytes[14], bytes[15]])
+            bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7],
+            bytes[8], bytes[9], bytes[10], bytes[11], bytes[12], bytes[13], bytes[14], bytes[15],
+        ])
     }
 }
 
@@ -335,20 +329,18 @@ impl ByteStructUnspecifiedByteOrder for i128 {
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         i128::from_le_bytes([
-            bytes[0], bytes[1], bytes[2], bytes[3],
-            bytes[4], bytes[5], bytes[6], bytes[7],
-            bytes[8], bytes[9], bytes[10], bytes[11],
-            bytes[12], bytes[13], bytes[14], bytes[15]])
+            bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7],
+            bytes[8], bytes[9], bytes[10], bytes[11], bytes[12], bytes[13], bytes[14], bytes[15],
+        ])
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
         bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         i128::from_be_bytes([
-            bytes[0], bytes[1], bytes[2], bytes[3],
-            bytes[4], bytes[5], bytes[6], bytes[7],
-            bytes[8], bytes[9], bytes[10], bytes[11],
-            bytes[12], bytes[13], bytes[14], bytes[15]])
+            bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7],
+            bytes[8], bytes[9], bytes[10], bytes[11], bytes[12], bytes[13], bytes[14], bytes[15],
+        ])
     }
 }
 
@@ -381,95 +373,47 @@ impl ByteStructUnspecifiedByteOrder for f64 {
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         f64::from_bits(u64::from_le_bytes([
-            bytes[0], bytes[1], bytes[2], bytes[3],
-            bytes[4], bytes[5], bytes[6], bytes[7]]))
+            bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7],
+        ]))
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
         bytes.copy_from_slice(&self.clone().to_bits().to_be_bytes()[..]);
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         f64::from_bits(u64::from_le_bytes([
-            bytes[0], bytes[1], bytes[2], bytes[3],
-            bytes[4], bytes[5], bytes[6], bytes[7]]))
+            bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7],
+        ]))
     }
 }
 
-macro_rules! byte_struct_array {
-    ($x:expr) => {
-        impl<T: ByteStructLen> ByteStructLen for [T; $x] {
-            const BYTE_LEN: usize = ($x) * T::BYTE_LEN;
-        }
-
-        impl<T: ByteStructUnspecifiedByteOrder> ByteStructUnspecifiedByteOrder for [T; $x] {
-            fn write_bytes_default_le(&self, bytes: &mut [u8]) {
-                let mut pos = 0;
-                let len = T::BYTE_LEN;
-                for i in 0 .. ($x) {
-                    self[i].write_bytes_default_le(&mut bytes[pos .. pos + len]);
-                    pos += len;
-                }
-            }
-            fn read_bytes_default_le(bytes: &[u8]) -> Self {
-                let len = T::BYTE_LEN;
-                (0 .. ($x)).map(|i| {
-                    <T>::read_bytes_default_le(&bytes[i * len .. (i + 1) * len])
-                }).collect::<Vec<_>>().try_into().map_err(|_|()).unwrap()
-            }
-            fn write_bytes_default_be(&self, bytes: &mut [u8]) {
-                let mut pos = 0;
-                let len = T::BYTE_LEN;
-                for i in 0 .. ($x) {
-                    self[i].write_bytes_default_be(&mut bytes[pos .. pos + len]);
-                    pos += len;
-                }
-            }
-            fn read_bytes_default_be(bytes: &[u8]) -> Self {
-                let len = T::BYTE_LEN;
-                (0 .. ($x)).map(|i| {
-                    <T>::read_bytes_default_be(&bytes[i * len .. (i + 1) * len])
-                }).collect::<Vec<_>>().try_into().map_err(|_|()).unwrap()
-            }
-        }
-    }
+impl<T: ByteStructLen, const N: usize> ByteStructLen for [T; N] {
+    const BYTE_LEN: usize = N * T::BYTE_LEN;
 }
 
-macro_rules! bsa0 { ($x:expr) => { byte_struct_array!($x);}}
-macro_rules! bsa1 { ($x:expr) => { bsa0!($x); bsa0!(1 + $x);}}
-macro_rules! bsa2 { ($x:expr) => { bsa1!($x); bsa1!(2 + $x);}}
-macro_rules! bsa3 { ($x:expr) => { bsa2!($x); bsa2!(4 + $x);}}
-macro_rules! bsa4 { ($x:expr) => { bsa3!($x); bsa3!(8 + $x);}}
-macro_rules! bsa5 { ($x:expr) => { bsa4!($x); bsa4!(16 + $x);}}
-bsa5!(1);
-
-byte_struct_array!(100);
-byte_struct_array!(3000);
-
-impl<T: ByteStructLen, U: ArrayLength<T>> ByteStructLen for generic_array::GenericArray<T, U> {
-    const BYTE_LEN: usize = T::BYTE_LEN * U::USIZE;
-}
-
-impl<T: ByteStructUnspecifiedByteOrder, U: ArrayLength<T>> ByteStructUnspecifiedByteOrder for GenericArray<T, U> {
+impl<T: ByteStructUnspecifiedByteOrder, const N: usize> ByteStructUnspecifiedByteOrder for [T; N] {
     fn write_bytes_default_le(&self, bytes: &mut [u8]) {
         let mut pos = 0;
         let len = T::BYTE_LEN;
-        for i in 0 .. U::USIZE {
-            self[i].write_bytes_default_le(&mut bytes[pos .. pos + len]);
+        for i in 0..N {
+            self[i].write_bytes_default_le(&mut bytes[pos..pos + len]);
             pos += len;
         }
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
-        Self::from_exact_iter(bytes.chunks_exact(T::BYTE_LEN).map(T::read_bytes_default_le)).unwrap()
+        let len = T::BYTE_LEN;
+        array_init::array_init(|i| <T>::read_bytes_default_le(&bytes[i * len..(i + 1) * len]))
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
         let mut pos = 0;
         let len = T::BYTE_LEN;
-        for i in 0 .. U::USIZE {
-            self[i].write_bytes_default_be(&mut bytes[pos .. pos + len]);
+        for i in 0..N {
+            self[i].write_bytes_default_be(&mut bytes[pos..pos + len]);
             pos += len;
         }
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
-        Self::from_exact_iter(bytes.chunks_exact(T::BYTE_LEN).map(T::read_bytes_default_be)).unwrap()
+        let len = T::BYTE_LEN;
+        array_init::array_init(|i| <T>::read_bytes_default_be(&bytes[i * len..(i + 1) * len]))
     }
 }
 

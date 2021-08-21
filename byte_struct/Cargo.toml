@@ -1,6 +1,6 @@
 [package]
 name = "byte_struct"
-version = "0.6.1"
+version = "0.7.0"
 authors = ["Weiyi Wang <wwylele@gmail.com>"]
 edition = "2018"
 license = "MIT OR Apache-2.0"
@@ -12,6 +12,6 @@ readme = "../README.md"
 
 [dependencies]
 byte_struct_derive = { version = "0.4.2", path = "../byte_struct_derive" }
-generic-array = ">=0.11"
+array-init = "2"
 
 [dev-dependencies]
