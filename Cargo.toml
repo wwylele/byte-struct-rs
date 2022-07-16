@@ -3,5 +3,9 @@
 members = [
     "byte_struct",
     "byte_struct_derive",
-    "tests",
+    "tests/test_byte_struct",
+]
+
+exclude = [
+    "tests/test_no_std"
 ]

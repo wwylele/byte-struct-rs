@@ -1,8 +1,8 @@
 [package]
 name = "byte_struct"
-version = "0.7.1"
+version = "0.8.0"
 authors = ["Weiyi Wang <wwylele@gmail.com>"]
-edition = "2018"
+edition = "2021"
 license = "MIT OR Apache-2.0"
 description = "Pack and unpack structure as raw bytes with packed or bit field layout."
 repository = "https://github.com/wwylele/byte-struct-rs"
