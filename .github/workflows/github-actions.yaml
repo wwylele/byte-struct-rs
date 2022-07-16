@@ -23,11 +23,10 @@ jobs:
           # Run tests of all functionality except compatibility with panic-never and no-std
           cd ./tests/test_byte_struct
           cargo test
-          cd ..
 
           # Check for panic branches and no-std compatibility by building for an anonymous platform
           # with link-time optimization
-          cd ./tests/test_no_std
+          cd ../test_no_std
           cargo build --target thumbv7em-none-eabihf
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
