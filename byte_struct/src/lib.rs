@@ -48,6 +48,8 @@
 //! }
 //! ```
 
+#![no_std]
+
 pub use byte_struct_derive::{ByteStruct, ByteStructBE, ByteStructLE};
 
 /// A type that can be packed into or unpacked from fixed-size bytes, but the method is unknown yet.

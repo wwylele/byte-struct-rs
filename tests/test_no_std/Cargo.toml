@@ -1,0 +1,26 @@
+[package]
+name = "test_no_std"
+version = "0.1.0"
+edition = "2021"
+authors = ["James Logan <jlogan03@gmail.com>"]
+publish = false
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+byte_struct = { path = "../../byte_struct" }
+panic-never = "0.1.0"
+
+[profile.dev]
+panic = "abort"  # Shortcut for no-std panic handler
+opt-level = "s"  # Compiler optimization for minimum file size - helps eliminate unused branches
+lto = true       # Use full link-time optimization to remove references to panic handler
+debug = true     # Include debugging flags & allow panic branches
+debug-assertions = true
+overflow-checks = true
+
+[profile.release]
+panic = "abort"  # Shortcut for no-std panic handler
+opt-level = "s"  # Compiler optimization for minimum file size - helps eliminate unused branches
+lto = true       # Use full link-time optimization to remove references to panic handler
+

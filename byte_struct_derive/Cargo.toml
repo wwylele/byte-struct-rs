@@ -2,7 +2,7 @@
 name = "byte_struct_derive"
 version = "0.4.2"
 authors = ["Weiyi Wang <wwylele@gmail.com>"]
-edition = "2018"
+edition = "2021"
 license = "MIT OR Apache-2.0"
 description = "Derive macro for byte_struct"
 repository = "https://github.com/wwylele/byte-struct-rs"
