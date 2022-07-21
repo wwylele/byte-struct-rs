@@ -139,13 +139,13 @@ impl ByteStructLen for u8 {
 
 impl ByteStructUnspecifiedByteOrder for u8 {
     fn write_bytes_default_le(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
+        bytes.copy_from_slice(&self.to_le_bytes()[..]);
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         u8::from_le_bytes([bytes[0]])
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
+        bytes.copy_from_slice(&self.to_be_bytes()[..]);
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         u8::from_be_bytes([bytes[0]])
@@ -158,13 +158,13 @@ impl ByteStructLen for i8 {
 
 impl ByteStructUnspecifiedByteOrder for i8 {
     fn write_bytes_default_le(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
+        bytes.copy_from_slice(&self.to_le_bytes()[..]);
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         i8::from_le_bytes([bytes[0]])
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
+        bytes.copy_from_slice(&self.to_be_bytes()[..]);
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         i8::from_be_bytes([bytes[0]])
@@ -177,13 +177,13 @@ impl ByteStructLen for u16 {
 
 impl ByteStructUnspecifiedByteOrder for u16 {
     fn write_bytes_default_le(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
+        bytes.copy_from_slice(&self.to_le_bytes()[..]);
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         u16::from_le_bytes([bytes[0], bytes[1]])
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
+        bytes.copy_from_slice(&self.to_be_bytes()[..]);
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         u16::from_be_bytes([bytes[0], bytes[1]])
@@ -196,13 +196,13 @@ impl ByteStructLen for i16 {
 
 impl ByteStructUnspecifiedByteOrder for i16 {
     fn write_bytes_default_le(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
+        bytes.copy_from_slice(&self.to_le_bytes()[..]);
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         i16::from_le_bytes([bytes[0], bytes[1]])
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
+        bytes.copy_from_slice(&self.to_be_bytes()[..]);
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         i16::from_be_bytes([bytes[0], bytes[1]])
@@ -215,13 +215,13 @@ impl ByteStructLen for u32 {
 
 impl ByteStructUnspecifiedByteOrder for u32 {
     fn write_bytes_default_le(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
+        bytes.copy_from_slice(&self.to_le_bytes()[..]);
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]])
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
+        bytes.copy_from_slice(&self.to_be_bytes()[..]);
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         u32::from_be_bytes([bytes[0], bytes[1], bytes[2], bytes[3]])
@@ -234,13 +234,13 @@ impl ByteStructLen for i32 {
 
 impl ByteStructUnspecifiedByteOrder for i32 {
     fn write_bytes_default_le(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
+        bytes.copy_from_slice(&self.to_le_bytes()[..]);
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         i32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]])
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
+        bytes.copy_from_slice(&self.to_be_bytes()[..]);
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         i32::from_be_bytes([bytes[0], bytes[1], bytes[2], bytes[3]])
@@ -253,7 +253,7 @@ impl ByteStructLen for u64 {
 
 impl ByteStructUnspecifiedByteOrder for u64 {
     fn write_bytes_default_le(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
+        bytes.copy_from_slice(&self.to_le_bytes()[..]);
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         u64::from_le_bytes([
@@ -261,7 +261,7 @@ impl ByteStructUnspecifiedByteOrder for u64 {
         ])
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
+        bytes.copy_from_slice(&self.to_be_bytes()[..]);
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         u64::from_be_bytes([
@@ -276,7 +276,7 @@ impl ByteStructLen for i64 {
 
 impl ByteStructUnspecifiedByteOrder for i64 {
     fn write_bytes_default_le(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
+        bytes.copy_from_slice(&self.to_le_bytes()[..]);
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         i64::from_le_bytes([
@@ -284,7 +284,7 @@ impl ByteStructUnspecifiedByteOrder for i64 {
         ])
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
+        bytes.copy_from_slice(&self.to_be_bytes()[..]);
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         i64::from_be_bytes([
@@ -299,7 +299,7 @@ impl ByteStructLen for u128 {
 
 impl ByteStructUnspecifiedByteOrder for u128 {
     fn write_bytes_default_le(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
+        bytes.copy_from_slice(&self.to_le_bytes()[..]);
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         u128::from_le_bytes([
@@ -308,7 +308,7 @@ impl ByteStructUnspecifiedByteOrder for u128 {
         ])
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
+        bytes.copy_from_slice(&self.to_be_bytes()[..]);
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         u128::from_be_bytes([
@@ -324,7 +324,7 @@ impl ByteStructLen for i128 {
 
 impl ByteStructUnspecifiedByteOrder for i128 {
     fn write_bytes_default_le(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_le_bytes()[..]);
+        bytes.copy_from_slice(&self.to_le_bytes()[..]);
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         i128::from_le_bytes([
@@ -333,7 +333,7 @@ impl ByteStructUnspecifiedByteOrder for i128 {
         ])
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_be_bytes()[..]);
+        bytes.copy_from_slice(&self.to_be_bytes()[..]);
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         i128::from_be_bytes([
@@ -349,13 +349,13 @@ impl ByteStructLen for f32 {
 
 impl ByteStructUnspecifiedByteOrder for f32 {
     fn write_bytes_default_le(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_bits().to_le_bytes()[..]);
+        bytes.copy_from_slice(&self.to_bits().to_le_bytes()[..]);
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         f32::from_bits(u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]))
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_bits().to_be_bytes()[..]);
+        bytes.copy_from_slice(&self.to_bits().to_be_bytes()[..]);
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         f32::from_bits(u32::from_be_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]))
@@ -368,7 +368,7 @@ impl ByteStructLen for f64 {
 
 impl ByteStructUnspecifiedByteOrder for f64 {
     fn write_bytes_default_le(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_bits().to_le_bytes()[..]);
+        bytes.copy_from_slice(&self.to_bits().to_le_bytes()[..]);
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         f64::from_bits(u64::from_le_bytes([
@@ -376,7 +376,7 @@ impl ByteStructUnspecifiedByteOrder for f64 {
         ]))
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
-        bytes.copy_from_slice(&self.clone().to_bits().to_be_bytes()[..]);
+        bytes.copy_from_slice(&self.to_bits().to_be_bytes()[..]);
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         f64::from_bits(u64::from_le_bytes([
@@ -393,8 +393,8 @@ impl<T: ByteStructUnspecifiedByteOrder, const N: usize> ByteStructUnspecifiedByt
     fn write_bytes_default_le(&self, bytes: &mut [u8]) {
         let mut pos = 0;
         let len = T::BYTE_LEN;
-        for i in 0..N {
-            self[i].write_bytes_default_le(&mut bytes[pos..pos + len]);
+        for element in self {
+            element.write_bytes_default_le(&mut bytes[pos..pos + len]);
             pos += len;
         }
     }
@@ -405,8 +405,8 @@ impl<T: ByteStructUnspecifiedByteOrder, const N: usize> ByteStructUnspecifiedByt
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
         let mut pos = 0;
         let len = T::BYTE_LEN;
-        for i in 0..N {
-            self[i].write_bytes_default_be(&mut bytes[pos..pos + len]);
+        for element in self {
+            element.write_bytes_default_be(&mut bytes[pos..pos + len]);
             pos += len;
         }
     }
