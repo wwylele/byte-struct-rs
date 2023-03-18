@@ -119,7 +119,8 @@ fn byte_struct_macro_derive_impl(input: TokenStream, endianness_input: Endiannes
 
     let mut found_le = false;
     let mut found_be = false;
-    for syn::Attribute{path: syn::Path{segments, ..}, ..} in ast.attrs {
+    for attr in ast.attrs {
+        let syn::Attribute{meta: syn::Meta::Path(syn::Path{segments, ..}), ..} = attr else {continue};
         if segments.len() != 1 {
             continue;
         }
@@ -152,7 +153,8 @@ fn byte_struct_macro_derive_impl(input: TokenStream, endianness_input: Endiannes
             ident1.push(n.ident.unwrap().clone());
             let mut found_le = false;
             let mut found_be = false;
-            for syn::Attribute{path: syn::Path{segments, ..}, ..} in n.attrs {
+            for attr in n.attrs {
+                let syn::Attribute{meta: syn::Meta::Path(syn::Path{segments, ..}), ..} = attr else {continue};
                 if segments.len() != 1 {
                     continue;
                 }
