@@ -400,7 +400,7 @@ impl<T: ByteStructUnspecifiedByteOrder, const N: usize> ByteStructUnspecifiedByt
     }
     fn read_bytes_default_le(bytes: &[u8]) -> Self {
         let len = T::BYTE_LEN;
-        array_init::array_init(|i| <T>::read_bytes_default_le(&bytes[i * len..(i + 1) * len]))
+        core::array::from_fn(|i| <T>::read_bytes_default_le(&bytes[i * len..(i + 1) * len]))
     }
     fn write_bytes_default_be(&self, bytes: &mut [u8]) {
         let mut pos = 0;
@@ -412,7 +412,7 @@ impl<T: ByteStructUnspecifiedByteOrder, const N: usize> ByteStructUnspecifiedByt
     }
     fn read_bytes_default_be(bytes: &[u8]) -> Self {
         let len = T::BYTE_LEN;
-        array_init::array_init(|i| <T>::read_bytes_default_be(&bytes[i * len..(i + 1) * len]))
+        core::array::from_fn(|i| <T>::read_bytes_default_be(&bytes[i * len..(i + 1) * len]))
     }
 }
 

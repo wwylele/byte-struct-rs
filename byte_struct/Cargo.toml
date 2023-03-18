@@ -12,6 +12,5 @@ readme = "../README.md"
 
 [dependencies]
 byte_struct_derive = { version = "0.4.2", path = "../byte_struct_derive" }
-array-init = "2"
 
 [dev-dependencies]
